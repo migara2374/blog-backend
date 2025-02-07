@@ -1,23 +1,12 @@
-require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("./config/db"); // Import MongoDB connection
-const authRoutes = require("./routes/authRoutes");
-const postRoutes = require("./routes/postRoutes");
+const connectDB = require("./config/db");
+require("dotenv").config();
+
+connectDB();
 
 const app = express();
+app.use(express.json());
+app.use("/api", require("./routes/authRoutes"));
+app.use("/api/posts", require("./routes/postRoutes"));
 
-// Middleware
-app.use(cors());
-app.use(express.json()); // Parse JSON bodies
-
-// Routes
-app.use("/api", authRoutes);
-app.use("/api/posts", postRoutes);
-
-// Default Route
-app.get("/", (req, res) => {
-  res.send("Welcome to the Simple Blog API!");
-});
-
-module.exports = app;
+app.listen(process.env.PORT, () => console.log("Server running..."));
