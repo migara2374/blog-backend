@@ -1,16 +1,7 @@
-require("dotenv").config(); 
-const express = require("express");
-const connectDB = require("./src/config/db"); 
+const app = require("./app");
 
-const authRoutes = require("./src/routes/authRoutes"); 
-const postRoutes = require("./src/routes/postRoutes"); 
+const PORT = process.env.PORT || 5000;
 
-connectDB(); 
-
-const app = express();
-app.use(express.json()); 
-
-app.use("./api", authRoutes);
-app.use("./api", postRoutes);
-
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
