@@ -4,10 +4,10 @@ const {createPost, getPosts, getPost, updatePost, deletePost} = require("../cont
 
 const router = express.Router();
 
-router.get("./posts", getPosts);
-router.get("/posts/:id", getPost);
-router.post("/posts", authMiddleware, createPost);
-router.put("/posts/:id", authMiddleware, updatePost); 
-router.delete("/posts/:id", authMiddleware, deletePost); 
+router.get("/", getPosts);
+router.get("/:id", getPost);
+router.post("/", authMiddleware, createPost);
+router.put("/:id", authMiddleware, updatePost); 
+router.delete("/:id", authMiddleware, deletePost); 
 
 module.exports = router;
