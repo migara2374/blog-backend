@@ -1,31 +1,32 @@
 const Post = require("../models/Post");
 
-exports.createPost = async (req,res) => {
+exports.createPost = async (req, res) => {
     try {
-        const {title, content} = req.body; 
-        const post = await Post.create({title, content, author: req.user.id });
-
-        res.status(201).json(post); 
+        const { title, content } = req.body;
+        const post = new Post({ title, content, author: req.user.userId });
+        await post.save();
+        res.status(201).json(post);
     } catch (error) {
-        res.status(400).json({error : error.message}); 
+        res.status(400).json({ error: "Post creation failed" });
     }
-} 
-
-
-exports.getPosts = async (req,res) => {
-    const post = await Post.find().populate("author", "username email"); 
-    if(!post) return res.status(404).json({message : "Post not found"}); 
-
-    res.json(post); 
 };
 
+exports.getAllPosts = async (req, res) => {
+    const posts = await Post.find().populate("author", "username");
+    res.json(posts);
+};
 
-exports.updatePost = async (req,res) => {
-    const post = await Post.findByIdAndUpdate(req.params.id, res.json(post));
-}
+exports.getPostById = async (req, res) => {
+    const post = await Post.findById(req.params.id).populate("author", "username");
+    res.json(post);
+};
 
+exports.updatePost = async (req, res) => {
+    const post = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(post);
+};
 
-exports.deletePost = async (req,res) => {
-    await Post.findByIdAndDelete(req.params.id); 
-    res.json({message: "Post deleted"}); 
-}
+exports.deletePost = async (req, res) => {
+    await Post.findByIdAndDelete(req.params.id);
+    res.json({ message: "Post deleted" });
+};
